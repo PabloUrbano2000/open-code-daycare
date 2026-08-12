@@ -62,17 +62,17 @@ Convenciones:
 
 ## Acceptance criteria
 
-- [ ] `npx tsc --noEmit` y `npm run lint` pasan sin errores.
-- [ ] Clic en "Agregar niño" en `/kids` abre el modal; el botón mantiene el mismo aspecto (gradiente coral + `Plus`).
-- [ ] En desktop ≥1024px el modal replica `agregar-nino.dc.html`: panel `max-w-[520px]`, header Cancelar/Agregar niño/Guardar, y los 5 campos con fecha y sala lado a lado.
-- [ ] Esc, clic en backdrop y "Cancelar" cierran el modal sin errores.
-- [ ] "Guardar" con `fullName`, `birthDate` o `room` vacíos muestra el error en español bajo cada campo faltante y el modal permanece abierto.
-- [ ] Editar un campo con error limpia su mensaje.
-- [ ] El campo fecha solo acepta dígitos y `/` (máscara dd/mm/aaaa); `31/02/2020` muestra "Fecha inválida".
-- [ ] Con `fullName` "Martina López", `birthDate` "15/03/2022" y `room` "Soles", Guardar cierra el modal y no agrega ningún niño a la lista.
-- [ ] Alergias y notas médicas vacías no generan errores.
-- [ ] La lista de `/kids` se renderiza sin cambios y `/` no cambia (regresión).
-- [ ] Sin errores de consola al abrir/cerrar el modal ni al validar.
+- [x] `npx tsc --noEmit` y `npm run lint` pasan sin errores.
+- [x] Clic en "Agregar niño" en `/kids` abre el modal; el botón mantiene el mismo aspecto (gradiente coral + `Plus`).
+- [x] En desktop ≥1024px el modal replica `agregar-nino.dc.html`: panel `max-w-[520px]`, header Cancelar/Agregar niño/Guardar, y los 5 campos con fecha y sala lado a lado.
+- [x] Esc, clic en backdrop y "Cancelar" cierran el modal sin errores.
+- [x] "Guardar" con `fullName`, `birthDate` o `room` vacíos muestra el error en español bajo cada campo faltante y el modal permanece abierto.
+- [x] Editar un campo con error limpia su mensaje.
+- [x] El campo fecha solo acepta dígitos y `/` (máscara dd/mm/aaaa); `31/02/2020` muestra "Fecha inválida".
+- [x] Con `fullName` "Martina López", `birthDate` "15/03/2022" y `room` "Soles", Guardar cierra el modal y no agrega ningún niño a la lista.
+- [x] Alergias y notas médicas vacías no generan errores.
+- [x] La lista de `/kids` se renderiza sin cambios y `/` no cambia (regresión).
+- [x] Sin errores de consola al abrir/cerrar el modal ni al validar.
 
 ## Decisions taken and discarded
 
