@@ -27,10 +27,19 @@ Next.js 16.3.0 + React 19 + Tailwind CSS v4 (App Router). UI copy and design moc
 ## MCPs
 - Playwright: screenshots y cualquier artefacto de Playwright van en `.playwright-mcp` (gitignored).
 - Context7: usar para traer la documentación actualizada del framework.
+- Supabase: usar para todo lo relacionado con el backend (MCP tools; ver también la skill `supabase`).
+
+## Supabase / Backend
+- El backend de esta app es Supabase. El esquema de base de datos (tablas, columnas, RLS) está documentado en `07-DB-schema` (referencia externa, no implementado aún).
+- Usar la skill `supabase` para cualquier tarea que toque Supabase (DB, Auth, Edge Functions, Realtime, Storage, RLS, logs…).
+- Cargar la skill `supabase-postgres-best-practices` ANTES de escribir o modificar cualquier esquema/migración/query en Postgres.
+- Cambios de esquema (DDL) se aplican con `supabase_apply_migration`; consultas ad-hoc con `supabase_execute_sql`. RLS debe estar habilitado en todas las tablas expuestas.
 
 ## Spec Driven Development. - Skills
 - /spec Usaremos esta habilidad para crear las especificaciones.
 - /spec-impl Usaremos esta habilidad para hacer las implementaciones.
+- /supabase (`.agents/skills/supabase`) Cargar en cualquier tarea que involucre Supabase.
+- /supabase-postgres-best-practices (`.agents/skills/supabase-postgres-best-practices`) Cargar antes de tocar esquemas, migraciones, RLS o queries en Postgres.
 
 ## Reglas de código
 - Usar código limpio, nombres de variables, funciones, etc, en inglés.
