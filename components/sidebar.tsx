@@ -1,14 +1,16 @@
 import Link from "next/link";
 import { Bell, Home, LogOut, Plus, Sun, User, Users } from "lucide-react";
 
+export type ActiveItem = "feed" | "kids" | "notices" | "account";
+
 const navItems = [
-  { href: "#", label: "Feed", active: true, icon: Home },
-  { href: "#", label: "Niños", active: false, icon: Users },
-  { href: "#", label: "Avisos", active: false, icon: Bell },
-  { href: "#", label: "Mi cuenta", active: false, icon: User },
+  { key: "feed", href: "/", label: "Feed", icon: Home },
+  { key: "kids", href: "/kids", label: "Niños", icon: Users },
+  { key: "notices", href: "#", label: "Avisos", icon: Bell },
+  { key: "account", href: "#", label: "Mi cuenta", icon: User },
 ];
 
-export default function Sidebar() {
+export default function Sidebar({ activeItem = "feed" }: { activeItem?: ActiveItem }) {
   return (
     <aside className="hidden lg:flex sticky top-0 h-screen w-[248px] flex-none flex-col border-r border-line bg-surface px-4 py-6">
       <Link
@@ -40,7 +42,7 @@ export default function Sidebar() {
             key={item.label}
             href={item.href}
             className={`flex items-center gap-3 rounded-xl px-3 py-[11px] text-[14.5px] ${
-              item.active
+              item.key === activeItem
                 ? "bg-peach font-extrabold text-coral-brand"
                 : "font-semibold text-ink-soft"
             }`}

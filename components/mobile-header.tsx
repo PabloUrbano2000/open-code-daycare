@@ -3,15 +3,16 @@
 import Link from "next/link";
 import { useState } from "react";
 import { Bell, Home, Menu, Plus, Sun, User, Users, X } from "lucide-react";
+import type { ActiveItem } from "./sidebar";
 
 const navItems = [
-  { href: "#", label: "Feed", active: true, icon: Home },
-  { href: "#", label: "Niños", active: false, icon: Users },
-  { href: "#", label: "Avisos", active: false, icon: Bell },
-  { href: "#", label: "Mi cuenta", active: false, icon: User },
+  { key: "feed", href: "/", label: "Feed", icon: Home },
+  { key: "kids", href: "/kids", label: "Niños", icon: Users },
+  { key: "notices", href: "#", label: "Avisos", icon: Bell },
+  { key: "account", href: "#", label: "Mi cuenta", icon: User },
 ];
 
-export default function MobileHeader() {
+export default function MobileHeader({ activeItem = "feed" }: { activeItem?: ActiveItem }) {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -55,7 +56,7 @@ export default function MobileHeader() {
               href={item.href}
               onClick={() => setIsOpen(false)}
               className={`flex items-center gap-3 rounded-xl px-3 py-[11px] text-[14.5px] ${
-                item.active
+                item.key === activeItem
                   ? "bg-peach font-extrabold text-coral-brand"
                   : "font-semibold text-ink-soft"
               }`}
