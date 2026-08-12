@@ -23,10 +23,12 @@ function Avatar({
 
 function Badge({
   className,
+  dot,
   label,
   text,
 }: {
   className: string;
+  dot: string;
   label: string;
   text: string;
 }) {
@@ -34,7 +36,7 @@ function Badge({
     <div
       className={`flex items-center gap-[7px] rounded-full px-3 py-1.5 ${className}`}
     >
-      <span className={`size-2 rounded-full ${text}`} />
+      <span className={`size-2 rounded-full ${dot}`} />
       <span className={`text-xs font-extrabold tracking-[.5px] ${text}`}>
         {label}
       </span>
@@ -132,6 +134,7 @@ export default function Home() {
                 </div>
                 <Badge
                   className="bg-green-bg"
+                  dot="bg-green"
                   text="text-green"
                   label="LOGRO"
                 />
@@ -163,6 +166,7 @@ export default function Home() {
                 </div>
                 <Badge
                   className="bg-cyan-bg"
+                  dot="bg-cyan"
                   text="text-cyan"
                   label="ACTIVIDAD"
                 />
@@ -201,6 +205,7 @@ export default function Home() {
                 </div>
                 <Badge
                   className="bg-indigo-bg"
+                  dot="bg-indigo"
                   text="text-indigo"
                   label="ANUNCIO"
                 />

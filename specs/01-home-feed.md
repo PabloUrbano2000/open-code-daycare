@@ -39,16 +39,16 @@ No se introducen estructuras de datos nuevas. El contenido es JSX estático; sol
 
 ## Acceptance criteria
 
-- [ ] `/` renderiza el feed idéntico a `feed.dc.html` (tipografías, paleta, layout, espaciado) en viewport desktop ≥1024px.
-- [ ] Fredoka y Nunito se cargan vía `next/font`; no hay `<link>` a Google Fonts.
-- [ ] El sidebar de escritorio sale de `components/sidebar.tsx` con logo, botón "Nueva publicación", 4 ítems de nav (Feed activo) y perfil + logout de Caro; es visible solo a ≥1024px.
-- [ ] A <1024px el sidebar no se muestra; aparece el header móvil con hamburguesa que abre/cierra el panel con los 4 ítems (Feed activo) y el feed se adapta con padding móvil.
-- [ ] Todos los links (nav, logout, "Editar", placeholder de foto, tarjeta compositora) son `href="#"` y no navegan.
-- [ ] Los 3 posts se renderizan con el copy español exacto, badges (LOGRO/ACTIVIDAD/ANUNCIO), contadores (3/1, 5/2, 8/0) y acciones del footer.
-- [ ] La única interacción es el toggle del menú hamburguesa (`useState` local); los contadores/botones de posts no responden.
-- [ ] `lang="es"`, metadata en español, title "OpenDayCare".
-- [ ] Sin autenticación: sin página de login, sin middleware, sin sesión ni localStorage.
-- [ ] `npx tsc --noEmit` y `npm run lint` pasan sin errores.
+- [x] `/` renderiza el feed idéntico a `feed.dc.html` (tipografías, paleta, layout, espaciado) en viewport desktop ≥1024px.
+- [x] Fredoka y Nunito se cargan vía `next/font`; no hay `<link>` a Google Fonts.
+- [x] El sidebar de escritorio sale de `components/sidebar.tsx` con logo, botón "Nueva publicación", 4 ítems de nav (Feed activo) y perfil + logout de Caro; es visible solo a ≥1024px.
+- [x] A <1024px el sidebar no se muestra; aparece el header móvil con hamburguesa que abre/cierra el panel con los 4 ítems (Feed activo) y el feed se adapta con padding móvil.
+- [x] Todos los links (nav, logout, "Editar", placeholder de foto, tarjeta compositora) son `href="#"` y no navegan.
+- [x] Los 3 posts se renderizan con el copy español exacto, badges (LOGRO/ACTIVIDAD/ANUNCIO), contadores (3/1, 5/2, 8/0) y acciones del footer.
+- [x] La única interacción es el toggle del menú hamburguesa (`useState` local); los contadores/botones de posts no responden.
+- [x] `lang="es"`, metadata en español, title "OpenDayCare".
+- [x] Sin autenticación: sin página de login, sin middleware, sin sesión ni localStorage.
+- [x] `npx tsc --noEmit` y `npm run lint` pasan sin errores.
 
 ## Decisions taken and discarded
 

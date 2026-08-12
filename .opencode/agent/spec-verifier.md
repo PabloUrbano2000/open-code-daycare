@@ -1,7 +1,7 @@
 ---
 description: Verifies the acceptance criteria of a spec against the implemented code. Reads a spec from specs/, evaluates every item of its Acceptance criteria checklist (code inspection, tsc/lint, Next.js best-practice checks via Context7, and visual comparison of Playwright screenshots against references/screenshots using its vision model), marks each checkbox, and updates the spec state to Implemented when all pass. Use it to validate a spec's implementation.
 mode: subagent
-model: ollama/qwen3.6
+model: opencode/deepseek-v4-flash-free
 temperature: 0
 permission:
   bash:
