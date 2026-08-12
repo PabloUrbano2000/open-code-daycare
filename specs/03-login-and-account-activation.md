@@ -1,6 +1,6 @@
 # SPEC 03 — Login `/login` y activación de cuenta `/activate`
 
-**State:** Aprobado
+**State:** Implementado
 **Depends on:** SPEC 01
 **Date:** 2026-08-12
 **Objective:** Replicar visualmente las pantallas `login.dc.html` (`/login`) y `activar-cuenta.dc.html` (`/activate`) como maquetas estáticas standalone, sin sidebar, sin interacción y sin funcionalidad.
@@ -35,16 +35,16 @@ No se introducen estructuras de datos nuevas. Ambas pantallas son JSX estático 
 
 ## Acceptance criteria
 
-- [ ] `/login` es visualmente idéntico a `login.dc.html` en desktop ≥1024px (grid 2 col, panel hero gradiente, formulario, paleta y tipografías).
-- [ ] A <1024px el panel hero no se muestra y el formulario queda centrado sobre `bg-auth-bg`.
-- [ ] En `/login` el botón "Personal" aparece activo (bg/borde/texto del estado seleccionado) y "Familia" inactivo; ninguno responde al click (sin `useState`).
-- [ ] Inputs de `/login`: EMAIL con value `caro@opendaycare.com` y CONTRASEÑA con placeholder `••••••••`.
-- [ ] "Activá tu cuenta" navega a `/activate`; "Iniciar sesión" y "¿Olvidaste tu contraseña?" son `#`.
-- [ ] `/activate` replica `activar-cuenta.dc.html` (logo, tarjeta "Mateo · Sala Soles", inputs CÓDIGO `7K4P9` / EMAIL `lucia.fernandez@gmail.com` / CONTRASEÑA `contraseña`, label de consentimiento con check verde).
-- [ ] "Iniciar sesión" en `/activate` navega a `/login`; "Activar mi cuenta" es `#`.
-- [ ] `/login` y `/activate` no muestran sidebar ni mobile-header (standalone).
-- [ ] `npx tsc --noEmit` y `npm run lint` pasan sin errores.
-- [ ] La home `/` no cambia visualmente (regresión).
+- [x] `/login` es visualmente idéntico a `login.dc.html` en desktop ≥1024px (grid 2 col, panel hero gradiente, formulario, paleta y tipografías).
+- [x] A <1024px el panel hero no se muestra y el formulario queda centrado sobre `bg-auth-bg`.
+- [x] En `/login` el botón "Personal" aparece activo (bg/borde/texto del estado seleccionado) y "Familia" inactivo; ninguno responde al click (sin `useState`).
+- [x] Inputs de `/login`: EMAIL con value `caro@opendaycare.com` y CONTRASEÑA con placeholder `••••••••`.
+- [x] "Activá tu cuenta" navega a `/activate`; "Iniciar sesión" y "¿Olvidaste tu contraseña?" son `#`.
+- [x] `/activate` replica `activar-cuenta.dc.html` (logo, tarjeta "Mateo · Sala Soles", inputs CÓDIGO `7K4P9` / EMAIL `lucia.fernandez@gmail.com` / CONTRASEÑA `contraseña`, label de consentimiento con check verde).
+- [x] "Iniciar sesión" en `/activate` navega a `/login`; "Activar mi cuenta" es `#`.
+- [x] `/login` y `/activate` no muestran sidebar ni mobile-header (standalone).
+- [x] `npx tsc --noEmit` y `npm run lint` pasan sin errores.
+- [x] La home `/` no cambia visualmente (regresión).
 
 ## Decisions taken and discarded
 

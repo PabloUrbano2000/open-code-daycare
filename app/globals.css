@@ -33,6 +33,14 @@
   --color-field-border: #dbcdba;
   --color-field-ink: #b0a290;
   --color-scroll: #e4d6c4;
+
+  --color-auth-bg: #fbf4ec;
+  --color-auth-line: #eadfd0;
+  --color-auth-placeholder: #b6a99b;
+  --color-auth-warn: #fbf1d6;
+  --color-auth-warn-ink: #8a7234;
+  --color-auth-green: #5fb97e;
+  --color-auth-code: #f2a78e;
 }
 
 body {
