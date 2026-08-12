@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Bell, Home, LogOut, Plus, Sun, User, Users } from "lucide-react";
+import { NewPostDialog } from "@/components/new-post-dialog";
 
 export type ActiveItem = "feed" | "kids" | "notices" | "account";
 
@@ -28,13 +29,15 @@ export default function Sidebar({ activeItem = "feed" }: { activeItem?: ActiveIt
         </div>
       </Link>
 
-      <Link
-        href="#"
-        className="mb-[18px] flex w-full items-center justify-center gap-2 rounded-[14px] bg-[linear-gradient(180deg,#F4977E,#EE8164)] px-4 py-3 text-[14.5px] font-extrabold text-white shadow-[0_8px_18px_-8px_rgba(238,129,100,.75)]"
-      >
-        <Plus size={17} stroke="#fff" strokeWidth={2.4} />
-        Nueva publicación
-      </Link>
+      <NewPostDialog>
+        <button
+          type="button"
+          className="mb-[18px] flex w-full items-center justify-center gap-2 rounded-[14px] bg-[linear-gradient(180deg,#F4977E,#EE8164)] px-4 py-3 text-[14.5px] font-extrabold text-white shadow-[0_8px_18px_-8px_rgba(238,129,100,.75)]"
+        >
+          <Plus size={17} stroke="#fff" strokeWidth={2.4} />
+          Nueva publicación
+        </button>
+      </NewPostDialog>
 
       <nav className="flex flex-1 flex-col gap-1">
         {navItems.map((item) => (

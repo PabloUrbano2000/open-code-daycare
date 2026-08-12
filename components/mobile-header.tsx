@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { Bell, Home, Menu, Plus, Sun, User, Users, X } from "lucide-react";
 import type { ActiveItem } from "./sidebar";
+import { NewPostDialog } from "@/components/new-post-dialog";
 
 const navItems = [
   { key: "feed", href: "/", label: "Feed", icon: Home },
@@ -39,13 +40,15 @@ export default function MobileHeader({ activeItem = "feed" }: { activeItem?: Act
           </div>
         </Link>
 
-        <Link
-          href="#"
-          aria-label="Nueva publicación"
-          className="ml-auto flex size-10 flex-none items-center justify-center rounded-[12px] bg-[linear-gradient(180deg,#F4977E,#EE8164)] text-white shadow-[0_8px_18px_-8px_rgba(238,129,100,.75)]"
-        >
-          <Plus size={20} strokeWidth={2.4} />
-        </Link>
+        <NewPostDialog>
+          <button
+            type="button"
+            aria-label="Nueva publicación"
+            className="ml-auto flex size-10 flex-none items-center justify-center rounded-[12px] bg-[linear-gradient(180deg,#F4977E,#EE8164)] text-white shadow-[0_8px_18px_-8px_rgba(238,129,100,.75)]"
+          >
+            <Plus size={20} strokeWidth={2.4} />
+          </button>
+        </NewPostDialog>
       </div>
 
       {isOpen && (

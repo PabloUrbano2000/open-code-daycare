@@ -2,6 +2,7 @@ import Link from "next/link";
 import { Camera, Heart, Image as ImageIcon, MessageCircle } from "lucide-react";
 import MobileHeader from "@/components/mobile-header";
 import Sidebar from "@/components/sidebar";
+import { NewPostDialog } from "@/components/new-post-dialog";
 
 function Avatar({
   initials,
@@ -94,20 +95,22 @@ export default function Home() {
             </p>
           </div>
 
-          <Link
-            href="#"
-            className="mb-6 flex items-center gap-[14px] rounded-[18px] border border-line bg-surface px-[18px] py-3.5 shadow-[0_4px_14px_-10px_rgba(120,90,60,.4)]"
-          >
-            <div className="flex size-10 flex-none items-center justify-center rounded-full bg-coral font-display text-base font-semibold text-white">
-              C
-            </div>
-            <span className="flex-1 text-[15px] text-ink-faint">
-              Compartí un momento…
-            </span>
-            <span className="flex size-[38px] items-center justify-center rounded-[12px] bg-peach text-coral-dark">
-              <Camera size={19} />
-            </span>
-          </Link>
+          <NewPostDialog>
+            <button
+              type="button"
+              className="mb-6 flex w-full items-center gap-[14px] rounded-[18px] border border-line bg-surface px-[18px] py-3.5 text-left shadow-[0_4px_14px_-10px_rgba(120,90,60,.4)]"
+            >
+              <div className="flex size-10 flex-none items-center justify-center rounded-full bg-coral font-display text-base font-semibold text-white">
+                C
+              </div>
+              <span className="flex-1 text-[15px] text-ink-faint">
+                Compartí un momento…
+              </span>
+              <span className="flex size-[38px] items-center justify-center rounded-[12px] bg-peach text-coral-dark">
+                <Camera size={19} />
+              </span>
+            </button>
+          </NewPostDialog>
 
           <div className="mb-[14px] flex items-center gap-[14px]">
             <span className="text-[12.5px] font-extrabold tracking-[.8px] text-[#8A7C6D]">
