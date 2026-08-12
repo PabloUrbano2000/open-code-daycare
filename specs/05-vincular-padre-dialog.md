@@ -1,6 +1,6 @@
 # SPEC 05 — Diálogo "Vincular padre" (modal)
 
-**State:** Aprobado
+**State:** Implementado
 **Depends on:** SPEC 02, SPEC 04
 **Date:** 2026-08-12
 **Objective:** Implementar el diálogo modal "Vincular padre" accionado desde la fila "Vincular otro padre" del perfil `/kids/[slug]`, con formulario validado por Zod (nombre, email y parentesco con pills Mamá/Papá/Tutor/a, default Mamá) cuyo "Enviar invitación" valida y cierra sin persistir.
@@ -53,18 +53,18 @@ Convenciones:
 
 ## Acceptance criteria
 
-- [ ] `npx tsc --noEmit` y `npm run lint` pasan sin errores.
-- [ ] Clic en "Vincular otro padre" en `/kids/[slug]` abre el modal; la fila mantiene el aspecto actual (círculo punteado + `Plus` + texto coral).
-- [ ] El panel replica `vincular-padre.dc.html`: `max-w-[480px]`, header "Vincular padre / a {kid.name}" con X, y las 5 secciones (info azul, nombre, email, parentesco, código 7K4P9).
-- [ ] X, Esc y clic en backdrop cierran el modal sin errores.
-- [ ] "Mamá" aparece activo al abrir; clic en "Papá" o "Tutor/a" lo activa y desactiva al anterior.
-- [ ] "Enviar invitación" con `name` o `email` vacíos o inválidos muestra el error en español bajo cada campo y el modal permanece abierto.
-- [ ] Editar un campo con error limpia su mensaje.
-- [ ] Con `name` "Diego Fernández", `email` válido y parentesco Papá, enviar cierra el modal y no agrega ningún padre a PADRES VINCULADOS.
-- [ ] El bloque de código muestra `7K4P9` y "Vence en 7 días" en toda apertura.
-- [ ] El modal "Agregar niño" (`/kids`) sigue funcionando igual tras el refactor de `form-controls`.
-- [ ] `/kids` y el perfil `/kids/[slug]` no cambian (regresión).
-- [ ] Sin errores de consola al abrir/cerrar/validar.
+- [x] `npx tsc --noEmit` y `npm run lint` pasan sin errores.
+- [x] Clic en "Vincular otro padre" en `/kids/[slug]` abre el modal; la fila mantiene el aspecto actual (círculo punteado + `Plus` + texto coral).
+- [x] El panel replica `vincular-padre.dc.html`: `max-w-[480px]`, header "Vincular padre / a {kid.name}" con X, y las 5 secciones (info azul, nombre, email, parentesco, código 7K4P9).
+- [x] X, Esc y clic en backdrop cierran el modal sin errores.
+- [x] "Mamá" aparece activo al abrir; clic en "Papá" o "Tutor/a" lo activa y desactiva al anterior.
+- [x] "Enviar invitación" con `name` o `email` vacíos o inválidos muestra el error en español bajo cada campo y el modal permanece abierto.
+- [x] Editar un campo con error limpia su mensaje.
+- [x] Con `name` "Diego Fernández", `email` válido y parentesco Papá, enviar cierra el modal y no agrega ningún padre a PADRES VINCULADOS.
+- [x] El bloque de código muestra `7K4P9` y "Vence en 7 días" en toda apertura.
+- [x] El modal "Agregar niño" (`/kids`) sigue funcionando igual tras el refactor de `form-controls`.
+- [x] `/kids` y el perfil `/kids/[slug]` no cambian (regresión).
+- [x] Sin errores de consola al abrir/cerrar/validar.
 
 ## Decisions taken and discarded
 

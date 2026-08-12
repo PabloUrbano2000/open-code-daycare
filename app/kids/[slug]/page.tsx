@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ChevronLeft, Plus, Sun, TriangleAlert } from "lucide-react";
+import { ChevronLeft, Sun, TriangleAlert } from "lucide-react";
 import MobileHeader from "@/components/mobile-header";
 import Sidebar from "@/components/sidebar";
+import { LinkParentDialog } from "@/components/link-parent-dialog";
 import { getKidBySlug, kids, type Parent } from "../data";
 
 export async function generateStaticParams() {
@@ -174,17 +175,7 @@ export default async function KidProfilePage({
                         </div>
                       );
                     })}
-                    <Link
-                      href="#"
-                      className="flex items-center gap-3 pt-2"
-                    >
-                      <span className="flex size-10 flex-none items-center justify-center rounded-full border-[1.5px] border-dashed border-[#D8CBBA] text-field-ink">
-                        <Plus size={18} strokeWidth={2.2} />
-                      </span>
-                      <span className="text-[14.5px] font-extrabold text-coral-darker">
-                        Vincular otro padre
-                      </span>
-                    </Link>
+                    <LinkParentDialog kidName={kid.name} />
                   </div>
                 </div>
               </div>

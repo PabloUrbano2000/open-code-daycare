@@ -1,6 +1,5 @@
 "use client";
 
-import type { ReactNode } from "react";
 import { useState } from "react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -8,6 +7,7 @@ import { useForm, Controller } from "react-hook-form";
 import { IMaskInput } from "react-imask";
 import { ChevronDown, Plus } from "lucide-react";
 import { z } from "zod";
+import { fieldClass, FieldLabel, FieldError } from "@/components/form-controls";
 
 export const ROOMS = ["Soles"] as const;
 
@@ -42,26 +42,6 @@ export type AddKidValues = z.input<typeof addKidSchema>;
 
 const DATE_MASK = "00/00/0000";
 const DATE_DEFINITIONS: Record<string, RegExp> = { "0": /\d/ };
-
-const fieldClass =
-  "w-full rounded-[14px] border-[1.5px] border-auth-line bg-white px-4 py-[13px] text-[15px] text-ink placeholder:text-auth-placeholder focus:outline-none";
-
-function FieldLabel({ children }: { children: ReactNode }) {
-  return (
-    <div className="mb-2 text-[12px] font-extrabold uppercase tracking-[.7px] text-ink-muted">
-      {children}
-    </div>
-  );
-}
-
-function FieldError({ message }: { message?: string }) {
-  if (!message) return null;
-  return (
-    <span className="mt-1.5 block text-[12.5px] font-bold text-danger">
-      {message}
-    </span>
-  );
-}
 
 export function AddKidDialog() {
   const [open, setOpen] = useState(false);
