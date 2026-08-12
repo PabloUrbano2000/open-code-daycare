@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ChevronRight, Plus, Search } from "lucide-react";
+import { ChevronRight, Search } from "lucide-react";
+import { AddKidDialog } from "@/components/add-kid-dialog";
 import MobileHeader from "@/components/mobile-header";
 import Sidebar from "@/components/sidebar";
 import { kids, type Kid } from "./data";
@@ -72,13 +73,7 @@ export default function KidsPage() {
                   Niños
                 </h1>
               </div>
-              <Link
-                href="#"
-                className="flex items-center gap-2 rounded-[14px] bg-[linear-gradient(180deg,#F4977E,#EE8164)] px-[18px] py-[11px] text-[14.5px] font-extrabold text-white shadow-[0_8px_18px_-8px_rgba(238,129,100,.7)]"
-              >
-                <Plus size={17} strokeWidth={2.4} />
-                Agregar niño
-              </Link>
+              <AddKidDialog />
             </div>
 
             <div className="mb-[22px] flex items-center gap-[11px] rounded-[14px] border border-line bg-surface px-4 py-3">

@@ -1,0 +1,105 @@
+- generic:
+  - generic:
+    - banner:
+      - generic:
+        - button
+        - link:
+          - /url: "#"
+          - generic:
+            - text: OpenDayCare
+            - generic: Sala Soles
+        - link:
+          - /url: "#"
+    - generic:
+      - main:
+        - generic:
+          - generic:
+            - generic:
+              - generic: GESTIÓN
+              - heading [level=1]: Niños
+            - button [expanded]: Agregar niño
+          - generic:
+            - textbox:
+              - /placeholder: Buscar niño…
+          - generic:
+            - generic: SALA SOLES
+            - generic: 8 niños
+          - generic:
+            - link:
+              - /url: /kids/mateo-fernandez
+              - generic: M
+              - generic:
+                - generic: Mateo Fernández
+                - generic: 3 años · 2 padres vinculados
+              - generic: MANÍ
+            - link:
+              - /url: /kids/sofia-mendez
+              - generic: S
+              - generic:
+                - generic: Sofía Méndez
+                - generic: 2 años · 1 padre vinculado
+            - link:
+              - /url: /kids/benjamin-ruiz
+              - generic: B
+              - generic:
+                - generic: Benjamín Ruiz
+                - generic: 3 años · 2 padres vinculados
+            - link:
+              - /url: /kids/valentina-soto
+              - generic: V
+              - generic:
+                - generic: Valentina Soto
+                - generic: 2 años · sin padres vinculados
+              - generic: VINCULAR
+            - link:
+              - /url: /kids/tomas-diaz
+              - generic: T
+              - generic:
+                - generic: Tomás Díaz
+                - generic: 3 años · 1 padre vinculado
+              - generic: LACTOSA
+            - link:
+              - /url: /kids/emma-castro
+              - generic: E
+              - generic:
+                - generic: Emma Castro
+                - generic: 2 años · 1 padre vinculado
+            - link:
+              - /url: /kids/lucas-romero
+              - generic: L
+              - generic:
+                - generic: Lucas Romero
+                - generic: 3 años · 1 padre vinculado
+            - link:
+              - /url: /kids/olivia-vega
+              - generic: O
+              - generic:
+                - generic: Olivia Vega
+                - generic: 2 años · 1 padre vinculado
+  - button "Open Next.js Dev Tools" [ref=e96] [cursor=pointer]
+  - alert
+  - dialog [active] [ref=e101]:
+    - generic [ref=e102]:
+      - generic [ref=e103]:
+        - button "Cancelar" [ref=e104]
+        - heading "Agregar niño" [level=2] [ref=e105]
+        - button "Guardar" [ref=e106]
+      - generic [ref=e107]:
+        - generic [ref=e108]: Nombre completo
+        - textbox "Ej. Martina López" [ref=e109]
+        - generic [ref=e122]: Escribí el nombre completo
+        - generic [ref=e110]:
+          - generic [ref=e111]:
+            - generic [ref=e112]: Fecha de nacimiento
+            - textbox "dd/mm/aaaa" [ref=e113]
+            - generic [ref=e123]: Formato dd/mm/aaaa
+          - generic [ref=e114]:
+            - generic [ref=e115]: Sala
+            - combobox [ref=e117]:
+              - option "Elegí la sala" [disabled] [selected]
+              - option "Soles"
+            - generic [ref=e124]: Elegí la sala
+        - generic [ref=e118]: Alergias (etiquetas)
+        - textbox "Ej. Maní, Lactosa" [ref=e119]
+        - generic [ref=e120]: Notas médicas
+        - textbox "Indicaciones, medicación, contactos…" [ref=e121]

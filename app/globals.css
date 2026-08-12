@@ -41,6 +41,8 @@
   --color-auth-warn-ink: #8a7234;
   --color-auth-green: #5fb97e;
   --color-auth-code: #f2a78e;
+
+  --color-danger: #d9534f;
 }
 
 body {
