@@ -1,6 +1,9 @@
 import Link from "next/link";
+import { cookies } from "next/headers";
 import { Bell, Home, LogOut, Plus, Sun, User, Users } from "lucide-react";
 import { NewPostDialog } from "@/components/new-post-dialog";
+import { createClient } from "@/utils/supabase/server";
+import { logout } from "@/app/logout/actions";
 
 export type ActiveItem = "feed" | "kids" | "notices" | "account";
 
@@ -11,7 +14,40 @@ const navItems = [
   { key: "account", href: "#", label: "Mi cuenta", icon: User },
 ];
 
-export default function Sidebar({ activeItem = "feed" }: { activeItem?: ActiveItem }) {
+const roleLabels: Record<string, string> = {
+  staff: "Maestra",
+  parent: "Familia",
+  admin: "Admin",
+};
+
+export default async function Sidebar({
+  activeItem = "feed",
+}: {
+  activeItem?: ActiveItem;
+}) {
+  const supabase = createClient(await cookies());
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  let fullName: string | null = null;
+  let roleLabel: string | null = null;
+
+  if (user) {
+    const { data } = await supabase
+      .from("users")
+      .select("full_name, role")
+      .eq("id", user.id)
+      .single();
+    if (data) {
+      fullName = data.full_name;
+      roleLabel = roleLabels[data.role] ?? null;
+    }
+  }
+
+  const displayName = fullName ?? "Usuario";
+  const initial = displayName.charAt(0).toUpperCase();
+
   return (
     <aside className="hidden lg:flex sticky top-0 h-screen w-[248px] flex-none flex-col border-r border-line bg-surface px-4 py-6">
       <Link
@@ -59,19 +95,23 @@ export default function Sidebar({ activeItem = "feed" }: { activeItem?: ActiveIt
       <div className="mt-2.5 border-t border-line pt-3.5">
         <div className="flex items-center gap-[11px] px-2 py-1.5">
           <div className="flex size-[38px] flex-none items-center justify-center rounded-full bg-coral font-display text-base font-semibold text-white">
-            C
+            {initial}
           </div>
           <div className="min-w-0 flex-1">
-            <div className="text-sm font-extrabold text-ink">Caro Giménez</div>
-            <div className="text-xs text-ink-faint">Maestra · Soles</div>
+            <div className="text-sm font-extrabold text-ink">{displayName}</div>
+            <div className="text-xs text-ink-faint">
+              {roleLabel ? `${roleLabel} · Soles` : "Soles"}
+            </div>
           </div>
-          <Link
-            href="#"
-            title="Cerrar sesión"
-            className="flex size-8 flex-none items-center justify-center rounded-[10px] bg-cream text-[#94887B]"
-          >
-            <LogOut size={16} strokeWidth={2} />
-          </Link>
+          <form action={logout}>
+            <button
+              type="submit"
+              title="Cerrar sesión"
+              className="flex size-8 flex-none items-center justify-center rounded-[10px] bg-cream text-[#94887B]"
+            >
+              <LogOut size={16} strokeWidth={2} />
+            </button>
+          </form>
         </div>
       </div>
     </aside>

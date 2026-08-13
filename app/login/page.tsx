@@ -1,12 +1,24 @@
-import type { Metadata } from "next";
-import Link from "next/link";
-import { Sun, User, Users } from "lucide-react";
+"use client";
 
-export const metadata: Metadata = {
-  title: "Iniciar sesión · OpenDayCare",
-};
+import Link from "next/link";
+import { useState } from "react";
+import { Sun } from "lucide-react";
+import { login } from "./actions";
+import { FieldError } from "@/components/form-controls";
 
 export default function LoginPage() {
+  const [error, setError] = useState<string | null>(null);
+  const [isPending, setIsPending] = useState(false);
+
+  async function handleLogin(formData: FormData) {
+    setIsPending(true);
+    const result = await login(formData);
+    if (result?.error) {
+      setError(result.error);
+    }
+    setIsPending(false);
+  }
+
   return (
     <div className="min-h-screen bg-auth-bg lg:grid lg:grid-cols-[1.05fr_1fr]">
       <div className="relative hidden flex-col justify-between overflow-hidden bg-[linear-gradient(155deg,#F6A98E,#F2937A_45%,#EC7E62)] px-[60px] py-14 text-white lg:flex">
@@ -48,58 +60,48 @@ export default function LoginPage() {
             Ingresá para ver el día de hoy.
           </p>
 
-          <div className="mb-[9px] text-xs font-bold tracking-[.7px] text-ink-muted">
-            INGRESO COMO
-          </div>
-          <div className="mb-[22px] flex gap-[10px]">
+          <form action={handleLogin}>
+            <div className="mb-2 text-xs font-bold tracking-[.7px] text-ink-muted">
+              EMAIL
+            </div>
+            <input
+              name="email"
+              type="email"
+              required
+              autoComplete="email"
+              className="mb-[18px] w-full rounded-[14px] border-[1.5px] border-auth-line bg-white px-4 py-[14px] text-[15px] text-ink"
+            />
+            <div className="mb-2 text-xs font-bold tracking-[.7px] text-ink-muted">
+              CONTRASEÑA
+            </div>
+            <input
+              name="password"
+              type="password"
+              required
+              autoComplete="current-password"
+              placeholder="••••••••"
+              className="mb-[10px] w-full rounded-[14px] border-[1.5px] border-auth-line bg-white px-4 py-[14px] text-[15px] text-ink placeholder:text-auth-placeholder"
+            />
+
+            <FieldError message={error ?? undefined} />
+
+            <div className="mb-5 text-right">
+              <Link
+                href="#"
+                className="text-[13.5px] font-bold text-coral-darker"
+              >
+                ¿Olvidaste tu contraseña?
+              </Link>
+            </div>
+
             <button
-              type="button"
-              className="flex flex-1 items-center gap-[9px] rounded-[14px] border-[1.5px] border-coral bg-peach px-[14px] py-[13px] text-sm font-bold text-coral-brand"
+              type="submit"
+              disabled={isPending}
+              className="block w-full rounded-[15px] bg-[linear-gradient(180deg,#F4977E,#EE8164)] px-4 py-[15px] text-center text-base font-extrabold text-white shadow-[0_10px_22px_-8px_rgba(238,129,100,.7)] disabled:opacity-60"
             >
-              <Users size={18} strokeWidth={2} />
-              Personal
+              {isPending ? "Ingresando…" : "Iniciar sesión"}
             </button>
-            <button
-              type="button"
-              className="flex flex-1 items-center gap-[9px] rounded-[14px] border-[1.5px] border-auth-line bg-white px-[14px] py-[13px] text-sm font-bold text-ink-soft"
-            >
-              <User size={18} strokeWidth={2} />
-              Familia
-            </button>
-          </div>
-
-          <div className="mb-2 text-xs font-bold tracking-[.7px] text-ink-muted">
-            EMAIL
-          </div>
-          <input
-            type="email"
-            defaultValue="caro@opendaycare.com"
-            className="mb-[18px] w-full rounded-[14px] border-[1.5px] border-auth-line bg-white px-4 py-[14px] text-[15px] text-ink"
-          />
-          <div className="mb-2 text-xs font-bold tracking-[.7px] text-ink-muted">
-            CONTRASEÑA
-          </div>
-          <input
-            type="password"
-            placeholder="••••••••"
-            className="mb-[10px] w-full rounded-[14px] border-[1.5px] border-auth-line bg-white px-4 py-[14px] text-[15px] text-ink placeholder:text-auth-placeholder"
-          />
-
-          <div className="mb-5 text-right">
-            <Link
-              href="#"
-              className="text-[13.5px] font-bold text-coral-darker"
-            >
-              ¿Olvidaste tu contraseña?
-            </Link>
-          </div>
-
-          <Link
-            href="#"
-            className="block w-full rounded-[15px] bg-[linear-gradient(180deg,#F4977E,#EE8164)] px-4 py-[15px] text-center text-base font-extrabold text-white shadow-[0_10px_22px_-8px_rgba(238,129,100,.7)]"
-          >
-            Iniciar sesión
-          </Link>
+          </form>
 
           <p className="m-0 mt-6 text-center text-[14.5px] text-ink-muted">
             ¿Te invitó la guardería?{" "}
