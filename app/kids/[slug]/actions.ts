@@ -27,6 +27,68 @@ function generateCode(): string {
   return code;
 }
 
+type SendEmailResult =
+  | { ok: true }
+  | { ok: false; kind: "config" | "transient" };
+
+function isConfigError(error: { name?: string; statusCode?: number | null }): boolean {
+  if (error.name === "validation_error") {
+    return true;
+  }
+  return error.statusCode === 401 || error.statusCode === 403;
+}
+
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+async function sendInvitationEmail(input: {
+  to: string;
+  kidName: string;
+  code: string;
+  activationUrl: string;
+  invitationId: string;
+}): Promise<SendEmailResult> {
+  const apiKey = process.env.RESEND_API_KEY;
+  if (!apiKey) {
+    return { ok: false, kind: "config" };
+  }
+
+  const resend = new Resend(apiKey);
+  const payload = {
+    from: process.env.EMAIL_FROM ?? "OpenDayCare <onboarding@resend.dev>",
+    to: input.to,
+    subject: `Te invitaron a seguir a ${input.kidName}`,
+    react: InvitationEmail({
+      kidName: input.kidName,
+      code: input.code,
+      expiresLabel: "Vence en 7 días",
+      activationUrl: input.activationUrl,
+    }),
+  };
+
+  const MAX_ATTEMPTS = 3;
+  for (let attempt = 0; attempt < MAX_ATTEMPTS; attempt++) {
+    const { error } = await resend.emails.send(payload, {
+      idempotencyKey: `invite-${input.invitationId}`,
+    });
+
+    if (!error) {
+      return { ok: true };
+    }
+
+    if (isConfigError(error)) {
+      return { ok: false, kind: "config" };
+    }
+
+    if (attempt < MAX_ATTEMPTS - 1) {
+      await sleep(800 * (attempt + 1));
+    }
+  }
+
+  return { ok: false, kind: "transient" };
+}
+
 export interface InviteParentResult {
   code?: string;
   expiresAt?: string;
@@ -87,25 +149,25 @@ export async function inviteParent(input: {
       return { error: "No se pudo crear la invitación." };
     }
 
-    const resend = new Resend(process.env.RESEND_API_KEY);
-    const { error: emailError } = await resend.emails.send({
-      from: process.env.EMAIL_FROM ?? "OpenDayCare <onboarding@resend.dev>",
+    const sendResult = await sendInvitationEmail({
       to: email,
-      subject: `Te invitaron a seguir a ${input.kidName}`,
-      react: InvitationEmail({
-        kidName: input.kidName,
-        code,
-        expiresLabel: "Vence en 7 días",
-        activationUrl: `${process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"}/activate?email=${encodeURIComponent(email)}`,
-      }),
+      kidName: input.kidName,
+      code,
+      activationUrl: `${process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"}/activate?email=${encodeURIComponent(email)}`,
+      invitationId: inserted.id,
     });
 
-    if (emailError) {
+    if (!sendResult.ok) {
       await supabase
         .from("invitations")
         .update({ status: "cancelled" })
         .eq("id", inserted.id);
-      return { error: "No se pudo enviar el correo. Revisá la configuración de email." };
+      return {
+        error:
+          sendResult.kind === "config"
+            ? "No se pudo enviar el correo. Revisá la configuración de email."
+            : "No se pudo enviar el correo. Intentá de nuevo en un momento.",
+      };
     }
 
     return { code, expiresAt: inserted.expires_at };
