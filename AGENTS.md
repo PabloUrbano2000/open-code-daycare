@@ -23,6 +23,7 @@ Next.js 16.3.0 + React 19 + Tailwind CSS v4 (App Router). UI copy and design moc
 - Tailwind v4: no `tailwind.config.*` — theme tokens are defined via `@theme inline` in `app/globals.css`.
 - `references/pantallas/*.dc.html` (+ `references/screenshots/`) are the visual UI spec for the daycare app; `support.js` there is generated — do not edit.
 - Large features use the spec-driven workflow via the repo-local `spec` / `spec-impl` skills (`.agents/skills/`); specs are saved to `specs/`.
+- **Specs that touch the database go in `specs/db/`** — if a spec involves Supabase (schema, tablas, migraciones, RLS, triggers, enums, seeds) it is saved to `specs/db/NN-slug.md`, not `specs/`. The numbering is sequential across both folders (the last DB spec was 08, so the next one is 09). Specs that only touch UI/code go in `specs/`.
 
 ## MCPs
 - Playwright: screenshots y cualquier artefacto de Playwright van en `.playwright-mcp` (gitignored).

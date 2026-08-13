@@ -18,6 +18,7 @@ Current branch:
 
 Specs available in this folder:
 !`ls specs/ 2>/dev/null || echo "The specs/ folder does not exist"`
+!`ls specs/db/ 2>/dev/null || echo "The specs/db/ folder does not exist"`
 
 Branch-creation config:
 !`cat specs/.spec-config.yml 2>/dev/null || echo "AutoCreateBranch: true (default, no config file)"`
@@ -36,14 +37,14 @@ The received argument is: `$ARGUMENTS`
 
 If `$ARGUMENTS` is empty:
 
-- List the files available in `specs/` (you already have them above).
+- List the files available in `specs/` and `specs/db/` (you already have them above).
 - Ask the user to specify the exact name of the spec.
 - Stop and wait for an answer. Do not continue.
 
 If `$ARGUMENTS` has a value:
 
-- Look for the file in `specs/`. The user may have written the full name (`01-mvp-arkanoid`), only the number (`01`), or only the slug (`mvp-arkanoid`). Try to find the correct file in any of those cases.
-- If you do not find the file, show the available specs and ask the user to correct the name.
+- Look for the file in `specs/` **and** `specs/db/`. The user may have written the full name (`01-mvp-arkanoid`, `08-users-table`), only the number (`01`), or only the slug (`mvp-arkanoid`). Try to find the correct file in any of those cases, checking both folders.
+- If you do not find the file, show the available specs from both folders and ask the user to correct the name.
 - If you do find it, continue to Phase 2.
 
 ---
@@ -145,7 +146,7 @@ Once you have confirmed the state means `Approved`:
    ```
    ✅ Ready to implement.
 
-   Spec:   specs/NN-slug.md
+   Spec:   specs/NN-slug.md   (o specs/db/NN-slug.md si la spec es de base de datos)
    Branch: spec-NN-slug  (active)   (← or the current branch, if no new branch was created)
    State:  Approved   (← echo back the actual value found in the spec)
    ```

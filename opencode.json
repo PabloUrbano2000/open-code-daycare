@@ -12,7 +12,7 @@
     }
   },
     "references": {
-    "docs": {
+    "db-schema": {
       "path": "../07-DB-schema",
       "description": "Schema de base de datos, tablas, columnas, y referencias a crear, esto no está implementado, solamente es una referencia de la base de datos."
     }
