@@ -1,6 +1,6 @@
 # SPEC 12 — Invitación de padre (código + email Resend) y registro en `/activate`
 
-> **State:** Aprobado
+> **State:** Implementado
 > **Depends on:** SPEC 05, SPEC 08, SPEC 09, SPEC 11
 > **Date:** 2026-08-13
 > **Objective:** Hacer que "Vincular padre" cree una invitación real (código único, vence en 7 días) en `public.invitations`, envíe un email vía Resend (React Email), y que `/activate` registre la cuenta del padre validando código + email, cree su auth user (Edge Function con service_role), lo vincule en `parent_children` y marque la invitación como aceptada, redirigiendo a `/login` con mensaje de éxito.
