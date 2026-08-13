@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { cookies } from "next/headers";
 import { ChevronRight, Search } from "lucide-react";
 import { AddKidDialog } from "@/components/add-kid-dialog";
 import MobileHeader from "@/components/mobile-header";
 import Sidebar from "@/components/sidebar";
+import { createClient } from "@/utils/supabase/server";
 import { kids, type Kid } from "./data";
 
 export const metadata: Metadata = {
@@ -54,7 +56,14 @@ function KidCard({ kid }: { kid: Kid }) {
   );
 }
 
-export default function KidsPage() {
+export default async function KidsPage() {
+  const supabase = createClient(await cookies());
+  const { data: roomRows } = await supabase
+    .from("rooms")
+    .select("name")
+    .order("name");
+  const rooms = (roomRows ?? []).map((room) => room.name);
+
   return (
     <div className="flex min-h-screen flex-col bg-cream">
       <MobileHeader activeItem="kids" />
@@ -73,7 +82,7 @@ export default function KidsPage() {
                   Niños
                 </h1>
               </div>
-              <AddKidDialog />
+              <AddKidDialog rooms={rooms} />
             </div>
 
             <div className="mb-[22px] flex items-center gap-[11px] rounded-[14px] border border-line bg-surface px-4 py-3">

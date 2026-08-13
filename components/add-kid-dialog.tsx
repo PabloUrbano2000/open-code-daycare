@@ -9,8 +9,6 @@ import { ChevronDown, Plus } from "lucide-react";
 import { z } from "zod";
 import { fieldClass, FieldLabel, FieldError } from "@/components/form-controls";
 
-export const ROOMS = ["Soles"] as const;
-
 function parseDate(value: string): Date {
   const [day, month, year] = value.split("/").map(Number);
   return new Date(year, month - 1, day);
@@ -43,7 +41,7 @@ export type AddKidValues = z.input<typeof addKidSchema>;
 const DATE_MASK = "00/00/0000";
 const DATE_DEFINITIONS: Record<string, RegExp> = { "0": /\d/ };
 
-export function AddKidDialog() {
+export function AddKidDialog({ rooms }: { rooms: string[] }) {
   const [open, setOpen] = useState(false);
 
   const {
@@ -157,7 +155,7 @@ export function AddKidDialog() {
                           <option value="" disabled>
                             Elegí la sala
                           </option>
-                          {ROOMS.map((room) => (
+                          {rooms.map((room) => (
                             <option key={room} value={room}>
                               {room}
                             </option>
