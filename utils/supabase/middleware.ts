@@ -43,7 +43,10 @@ export async function updateSession(request: NextRequest) {
   const user = claimsResult.data?.claims?.sub ? { id: claimsResult.data.claims.sub } : null;
 
   const { pathname } = request.nextUrl;
-  const isPrivate = pathname === "/" || pathname === "/kids";
+  const isPrivate =
+    pathname === "/" ||
+    pathname === "/kids" ||
+    pathname.startsWith("/kids/");
 
   if (isPrivate && !user) {
     const url = request.nextUrl.clone();

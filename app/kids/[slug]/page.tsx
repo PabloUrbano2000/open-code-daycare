@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { cookies } from "next/headers";
 import { ChevronLeft, Sun, TriangleAlert } from "lucide-react";
 import MobileHeader from "@/components/mobile-header";
 import Sidebar from "@/components/sidebar";
 import { LinkParentDialog } from "@/components/link-parent-dialog";
+import { createClient } from "@/utils/supabase/server";
 import { getKidBySlug, kids, type Parent } from "../data";
 
 export async function generateStaticParams() {
@@ -36,6 +38,14 @@ export default async function KidProfilePage({
   const { slug } = await params;
   const kid = getKidBySlug(slug);
   if (!kid) notFound();
+
+  const supabase = createClient(await cookies());
+  const { data: child } = await supabase
+    .from("children")
+    .select("id")
+    .eq("full_name", kid.name)
+    .single();
+  const childId = child?.id ?? null;
 
   return (
     <div className="flex min-h-screen flex-col bg-cream">
@@ -175,7 +185,7 @@ export default async function KidProfilePage({
                         </div>
                       );
                     })}
-                    <LinkParentDialog kidName={kid.name} />
+                    <LinkParentDialog kidName={kid.name} childId={childId} />
                   </div>
                 </div>
               </div>

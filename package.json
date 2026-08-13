@@ -18,8 +18,10 @@
     "next": "16.3.0",
     "react": "19.2.8",
     "react-dom": "19.2.8",
+    "react-email": "^6.9.2",
     "react-hook-form": "^7.85.0",
     "react-imask": "^7.6.1",
+    "resend": "^6.20.0",
     "zod": "^4.4.3"
   },
   "devDependencies": {
