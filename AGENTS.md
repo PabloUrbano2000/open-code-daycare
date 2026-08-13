@@ -38,6 +38,15 @@ Next.js 16.3.0 + React 19 + Tailwind CSS v4 (App Router). UI copy and design moc
 - Cada migración aplicada se replica como archivo local en `supabase/migrations/<version>_<name>.sql` con el MISMO `<version>` que reporta `supabase_list_migrations`, para mantener el histórico en el repo sin drift. No se editan ni renumeran migraciones ya aplicadas; los cambios nuevos van en migraciones nuevas.
 - Cambios de esquema (DDL) se aplican con `supabase_apply_migration`; consultas ad-hoc con `supabase_execute_sql`. RLS debe estar habilitado en todas las tablas expuestas.
 
+## Supabase desde el código (Next.js SSR)
+- Paquetes: `@supabase/supabase-js` y `@supabase/ssr`. Credenciales en `.env.local`: `NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` (publishable key — nunca exponer service_role/secret).
+- Helpers en `utils/supabase/`:
+  - `server.ts` — `createClient(cookieStore)` para Server Components, Server Actions y Route Handlers (leer cookies con `await cookies()`).
+  - `client.ts` — `createClient()` para Client Components (singleton en el browser).
+  - `middleware.ts` — `updateSession(request)` para refrescar sesiones; retorna `{ supabase, supabaseResponse }`.
+- El refresco de sesión va en el archivo raíz `proxy.ts` (Next.js 16 renombró `middleware.ts` → `proxy.ts`; exportar la función `proxy`). La consulta a la DB desde el backend se hace con el client de `@/utils/supabase/server` (ej. `await supabase.from('users').select()`); las queries respetan RLS.
+- Para proteger páginas/validar identidad usar `supabase.auth.getClaims()` (nunca confiar en `getSession()` en server code).
+
 ## Spec Driven Development. - Skills
 - /spec Usaremos esta habilidad para crear las especificaciones.
 - /spec-impl Usaremos esta habilidad para hacer las implementaciones.
