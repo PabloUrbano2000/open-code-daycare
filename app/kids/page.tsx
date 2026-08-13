@@ -6,11 +6,39 @@ import { AddKidDialog } from "@/components/add-kid-dialog";
 import MobileHeader from "@/components/mobile-header";
 import Sidebar from "@/components/sidebar";
 import { createClient } from "@/utils/supabase/server";
-import { kids, type Kid } from "./data";
 
 export const metadata: Metadata = {
   title: "Niños · OpenDayCare",
 };
+
+interface ChildRow {
+  id: string;
+  full_name: string;
+  birth_date: string;
+  allergy_tags: string[] | null;
+  rooms: { name: string } | { name: string }[] | null;
+}
+
+interface KidCardData {
+  slug: string;
+  name: string;
+  initials: string;
+  avatarBg: string;
+  avatarColor: string;
+  age: number;
+  badge?: { label: string; bg: string; color: string };
+}
+
+const allergyBadge = { bg: "#FBD8CC", color: "#D9684A" };
+
+const avatarPalette = [
+  { bg: "#A9D9E8", color: "#1F7A93" },
+  { bg: "#F4B8CC", color: "#C44A7A" },
+  { bg: "#B9DEC4", color: "#3E8B62" },
+  { bg: "#C9B6E8", color: "#7B5FC0" },
+  { bg: "#F4DC8E", color: "#9A7B1E" },
+  { bg: "#A9C7E8", color: "#2F6FB4" },
+];
 
 function parentsLabel(count: number): string {
   if (count === 0) return "sin padres vinculados";
@@ -18,7 +46,64 @@ function parentsLabel(count: number): string {
   return `${count} padres vinculados`;
 }
 
-function KidCard({ kid }: { kid: Kid }) {
+function slugify(fullName: string): string {
+  return fullName
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/\s+/g, "-");
+}
+
+function initials(fullName: string): string {
+  return fullName.trim().charAt(0).toUpperCase();
+}
+
+function hashString(value: string): number {
+  let hash = 0;
+  for (let i = 0; i < value.length; i++) {
+    hash = (hash << 5) - hash + value.charCodeAt(i);
+    hash |= 0;
+  }
+  return Math.abs(hash);
+}
+
+function ageFrom(birthDate: string): number {
+  const today = new Date();
+  const birth = new Date(birthDate);
+  let age = today.getFullYear() - birth.getFullYear();
+  const monthDiff = today.getMonth() - birth.getMonth();
+  if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+    age--;
+  }
+  return age;
+}
+
+function allergyBadgeFor(tags: string[] | null) {
+  if (!tags) return undefined;
+  if (tags.includes("peanut")) return { label: "MANÍ", ...allergyBadge };
+  if (tags.includes("lactose")) return { label: "LACTOSA", ...allergyBadge };
+  return undefined;
+}
+
+function toCardData(child: ChildRow): KidCardData {
+  const palette = avatarPalette[hashString(child.full_name) % avatarPalette.length];
+  return {
+    slug: slugify(child.full_name),
+    name: child.full_name,
+    initials: initials(child.full_name),
+    avatarBg: palette.bg,
+    avatarColor: palette.color,
+    age: ageFrom(child.birth_date),
+    badge: allergyBadgeFor(child.allergy_tags),
+  };
+}
+
+function roomNameOf(child: ChildRow): string {
+  const rooms = child.rooms;
+  return Array.isArray(rooms) ? rooms[0]?.name ?? "" : rooms?.name ?? "";
+}
+
+function KidCard({ kid }: { kid: KidCardData }) {
   return (
     <Link
       href={`/kids/${kid.slug}`}
@@ -35,7 +120,7 @@ function KidCard({ kid }: { kid: Kid }) {
           {kid.name}
         </div>
         <div className="text-[13px] text-ink-faint">
-          {kid.age} años · {parentsLabel(kid.parents.length)}
+          {kid.age} años · {parentsLabel(0)}
         </div>
       </div>
       {kid.badge ? (
@@ -63,6 +148,21 @@ export default async function KidsPage() {
     .select("name")
     .order("name");
   const rooms = (roomRows ?? []).map((room) => room.name);
+
+  const { data: childRows } = await supabase
+    .from("children")
+    .select("id, full_name, birth_date, allergy_tags, rooms(name)")
+    .order("rooms(name)")
+    .order("full_name");
+
+  const childrenByRoom = new Map<string, KidCardData[]>();
+  for (const child of (childRows ?? []) as ChildRow[]) {
+    const roomName = roomNameOf(child);
+    const list = childrenByRoom.get(roomName) ?? [];
+    list.push(toCardData(child));
+    childrenByRoom.set(roomName, list);
+  }
+  const sections = Array.from(childrenByRoom.entries());
 
   return (
     <div className="flex min-h-screen flex-col bg-cream">
@@ -93,21 +193,25 @@ export default async function KidsPage() {
               />
             </div>
 
-            <div className="mb-3.5 flex items-center gap-3">
-              <span className="text-[12.5px] font-extrabold tracking-[.8px] text-ink">
-                SALA SOLES
-              </span>
-              <span className="text-[13px] text-ink-faint">
-                {kids.length} niños
-              </span>
-              <span className="h-px flex-1 bg-hairline" />
-            </div>
+            {sections.map(([roomName, cards]) => (
+              <section key={roomName} className="mb-6">
+                <div className="mb-3.5 flex items-center gap-3">
+                  <span className="text-[12.5px] font-extrabold tracking-[.8px] text-ink">
+                    SALA {roomName.toUpperCase()}
+                  </span>
+                  <span className="text-[13px] text-ink-faint">
+                    {cards.length} niños
+                  </span>
+                  <span className="h-px flex-1 bg-hairline" />
+                </div>
 
-            <div className="grid grid-cols-1 gap-3.5 md:grid-cols-2">
-              {kids.map((kid) => (
-                <KidCard key={kid.slug} kid={kid} />
-              ))}
-            </div>
+                <div className="grid grid-cols-1 gap-3.5 md:grid-cols-2">
+                  {cards.map((kid) => (
+                    <KidCard key={kid.slug} kid={kid} />
+                  ))}
+                </div>
+              </section>
+            ))}
           </div>
         </main>
       </div>
