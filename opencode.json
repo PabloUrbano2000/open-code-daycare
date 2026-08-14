@@ -3,6 +3,9 @@
   "lsp": true,
   "formatter": true,
   "command": {
+    "grilling": {
+      "template": "Carga y sigue la skill spec en .agents/skills/grill-me/SKILL.md.\n\nFeature: $ARGUMENTS"
+    },
     "spec": {
       "description": "Crea especificaciones de pantallas y funcionalidades",
       "template": "Carga y sigue la skill spec en .agents/skills/spec/SKILL.md.\n\nFeature: $ARGUMENTS"
