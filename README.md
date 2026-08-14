@@ -1,36 +1,105 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Open DayCare
 
-## Getting Started
+Aplicación web de gestión de guarderías construida con **Next.js 16** + **React 19** + **Tailwind CSS v4** (App Router) y backend en **Supabase**. El copy de UI y los mockups están en español (ver `references/pantallas/`).
 
-First, run the development server:
+## Requisitos previos
+
+- **Node.js 20 o superior**
+- **npm**
+
+> Docker y el CLI de Supabase son opcionales: solo se necesitan si vas a trabajar con la pila local de Supabase o con migraciones vía CLI (ver [Supabase CLI](#supabase-cli)).
+
+## Configuración
+
+1. Instalar dependencias:
+
+```bash
+npm install
+```
+
+2. Crear el archivo de variables de entorno a partir de la plantilla:
+
+```bash
+cp .env.template .env
+```
+
+3. Completar las variables en `.env`:
+
+| Variable | Dónde obtenerla |
+| --- | --- |
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase → Project Settings → API |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Supabase → Project Settings → API Keys (publishable key) |
+| `SUPABASE_DB_PASSWORD` | Contraseña de la base de datos del proyecto |
+| `RESEND_API_KEY` | Resend → API Keys |
+| `EMAIL_FROM` | Remitente de los correos (por defecto `OpenDayCare <onboarding@resend.dev>`) |
+| `NEXT_PUBLIC_APP_URL` | URL pública de la app (por defecto `http://localhost:3000`) |
+
+> `.env` está en `.gitignore`. Nunca subas secretos ni la publishable key al repositorio.
+
+## Levantar el proyecto
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Abrir [http://localhost:3000](http://localhost:3000) en el navegador.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Otros comandos
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run lint        # ESLint
+npx tsc --noEmit    # Typecheck
+npm run build       # Build de producción
+```
 
-## Learn More
+## Backend (Supabase)
 
-To learn more about Next.js, take a look at the following resources:
+El backend de esta app es **Supabase** (proyecto `qgxexqucxfmfihkpsish`). Las migraciones viven en `supabase/migrations/` y las Edge Functions en `supabase/functions/`. El esquema de referencia está documentado en `07-DB-schema`.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Las credenciales se consumen desde el código con los helpers de `utils/supabase/` (`server.ts`, `client.ts`, `middleware.ts`) usando `@supabase/supabase-js` y `@supabase/ssr`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Supabase CLI
 
-## Deploy on Vercel
+Para que cada miembro del equipo pueda autenticarse y operar sobre el proyecto con el CLI:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. **Instalar el CLI**:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+brew install supabase/tap/supabase
+# o como dependencia del proyecto
+npm install -D supabase
+```
+
+2. **Iniciar sesión**. El CLI se autentica con un *personal access token* de tu cuenta:
+
+```bash
+supabase login
+```
+
+Genera tu token en [https://supabase.com/dashboard/account/tokens](https://supabase.com/dashboard/account/tokens) y pégalo en el prompt. El token queda guardado de forma segura en el credential store nativo del sistema (o en `~/.supabase/access-token` si no hay credential store disponible).
+
+3. **Verificar la sesión**:
+
+```bash
+supabase projects list
+```
+
+Para **CI/CD o entornos sin interacción**, en lugar de `supabase login` se usa la variable de entorno `SUPABASE_ACCESS_TOKEN` con el token de una cuenta de bot.
+
+**Vincular el proyecto** (requerido para comandos como `db push`, `db pull` o `migration list`):
+
+```bash
+supabase link --project-ref qgxexqucxfmfihkpsish
+```
+
+### MCP de Supabase
+
+Este repo usa el **MCP remoto de Supabase** (configurado en `opencode.json`) apuntando al proyecto `qgxexqucxfmfihkpsish`.
+
+**Autenticar el MCP.** La autenticación es **OAuth 2.1**: hay que autenticar el servidor MCP antes de que las herramientas queden disponibles. Con opencode:
+
+```bash
+opencode mcp auth supabase
+```
+
+El comando abre el flujo de login en el navegador; al completarlo, la sesión queda autorizada para el servidor `supabase`. Si las herramientas no aparecen después de autenticar, recarga la sesión del agente.

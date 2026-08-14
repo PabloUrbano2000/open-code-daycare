@@ -1,13 +1,13 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
+import { useId, useState, type ReactNode } from "react";
 import { Image as ImageIcon, Plus } from "lucide-react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller, get } from "react-hook-form";
 import { z } from "zod";
 import { kids } from "@/app/kids/data";
-import { fieldClass, FieldLabel, FieldError } from "@/components/form-controls";
+import { fieldClass, FieldLabel, FieldError, fieldErrorId } from "@/components/form-controls";
 
 export const POST_TYPES = [
   "Comida",
@@ -57,12 +57,30 @@ function targetPillClass(active: boolean) {
   }`;
 }
 
+function toggleTarget(
+  current: readonly PostTarget[],
+  option: PostTarget
+): PostTarget[] {
+  if (option === "toda-la-sala") {
+    return ["toda-la-sala"];
+  }
+  if (current.includes("toda-la-sala")) {
+    return [option];
+  }
+  return current.includes(option)
+    ? current.filter((t) => t !== option)
+    : [...current, option];
+}
+
 export function NewPostDialog({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false);
+
+  const descriptionId = useId();
 
   const {
     control,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<NewPostValues>({
     resolver: zodResolver(newPostSchema),
@@ -73,14 +91,30 @@ export function NewPostDialog({ children }: { children: ReactNode }) {
     },
   });
 
+  function handleOpenChange(next: boolean) {
+    setOpen(next);
+    if (!next) {
+      reset();
+    }
+  }
+
+  function onSubmit() {
+    setOpen(false);
+    reset();
+  }
+
   return (
-    <Dialog.Root open={open} onOpenChange={setOpen}>
+    <Dialog.Root open={open} onOpenChange={handleOpenChange}>
       <Dialog.Trigger asChild>{children}</Dialog.Trigger>
 
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-50 bg-[#3F362E]/40" />
         <Dialog.Content className="fixed left-1/2 top-1/2 z-50 w-[calc(100vw-32px)] max-w-[580px] -translate-x-1/2 -translate-y-1/2 overflow-hidden rounded-[24px] border border-line bg-auth-bg shadow-[0_20px_50px_-24px_rgba(63,54,46,.35)]">
-          <form onSubmit={handleSubmit(() => setOpen(false))} noValidate>
+          <Dialog.Description className="sr-only">
+            Formulario para crear una publicación con destinatarios, tipo,
+            descripción y fotos.
+          </Dialog.Description>
+          <form onSubmit={handleSubmit(onSubmit)} noValidate>
             <div className="flex items-center justify-between border-b border-line px-[26px] py-5">
               <Dialog.Close asChild>
                 <button
@@ -117,7 +151,12 @@ export function NewPostDialog({ children }: { children: ReactNode }) {
                             <button
                               key={option}
                               type="button"
-                              onClick={() => field.onChange(["toda-la-sala"])}
+                              aria-pressed={active}
+                              onClick={() =>
+                                field.onChange(
+                                  toggleTarget(field.value, "toda-la-sala")
+                                )
+                              }
                               className={`${targetPillClass(active)} px-4 py-[6px]`}
                             >
                               Toda la sala
@@ -128,18 +167,10 @@ export function NewPostDialog({ children }: { children: ReactNode }) {
                           <button
                             key={option}
                             type="button"
+                            aria-pressed={active}
                             onClick={() =>
                               field.onChange(
-                                field.value.includes(option)
-                                  ? field.value.filter(
-                                      (t) => t !== option
-                                    )
-                                  : [
-                                      ...field.value.filter(
-                                        (t) => t !== "toda-la-sala"
-                                      ),
-                                      option,
-                                    ]
+                                toggleTarget(field.value, option)
                               )
                             }
                             className={`${targetPillClass(active)} flex items-center gap-2 py-[6px] pl-[6px] pr-[14px]`}
@@ -161,6 +192,7 @@ export function NewPostDialog({ children }: { children: ReactNode }) {
                   )}
                 />
                 <FieldError
+                  id={fieldErrorId("targets")}
                   message={get(errors, "targets.message") as string | undefined}
                 />
               </div>
@@ -179,6 +211,7 @@ export function NewPostDialog({ children }: { children: ReactNode }) {
                           <button
                             key={type}
                             type="button"
+                            aria-pressed={active}
                             onClick={() => field.onChange(type)}
                             className={`rounded-full px-4 py-2 text-[13.5px] font-extrabold transition ${
                               active ? "ring-2 ring-ink/40" : ""
@@ -195,21 +228,31 @@ export function NewPostDialog({ children }: { children: ReactNode }) {
               </div>
 
               <div className="mb-[22px]">
-                <FieldLabel>DESCRIPCIÓN</FieldLabel>
+                <FieldLabel htmlFor={descriptionId}>DESCRIPCIÓN</FieldLabel>
                 <Controller
                   name="description"
                   control={control}
                   render={({ field }) => (
                     <textarea
                       {...field}
+                      id={descriptionId}
                       placeholder="Contá cómo le fue hoy…"
+                      aria-invalid={errors.description ? true : undefined}
+                      aria-describedby={
+                        errors.description
+                          ? fieldErrorId("description")
+                          : undefined
+                      }
                       className={`${fieldClass} min-h-[120px] resize-y py-[14px] leading-[1.5] ${
                         errors.description ? "border-danger" : ""
                       }`}
                     />
                   )}
                 />
-                <FieldError message={errors.description?.message} />
+                <FieldError
+                  id={fieldErrorId("description")}
+                  message={errors.description?.message}
+                />
               </div>
 
               <div>

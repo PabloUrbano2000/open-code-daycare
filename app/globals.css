@@ -10,14 +10,14 @@
   --color-hairline: #e7dac8;
   --color-ink: #3f362e;
   --color-ink-soft: #6e6359;
-  --color-ink-muted: #94887b;
+  --color-ink-muted: #73685c;
   --color-ink-faint: #a89a8b;
 
   --color-coral: #f2937a;
   --color-coral-deep: #ee8164;
   --color-coral-dark: #e0654a;
   --color-coral-brand: #d9583c;
-  --color-coral-darker: #c5503a;
+  --color-coral-darker: #b34530;
   --color-peach: #fbe3d8;
 
   --color-green: #3e9b6c;
@@ -47,7 +47,7 @@
   --color-gold: #a88526;
   --color-gold-line: #e6d08a;
 
-  --color-danger: #d9534f;
+  --color-danger: #c0392b;
 }
 
 body {

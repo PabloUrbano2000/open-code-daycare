@@ -53,5 +53,12 @@ Next.js 16.3.0 + React 19 + Tailwind CSS v4 (App Router). UI copy and design moc
 - /supabase (`.agents/skills/supabase`) Cargar en cualquier tarea que involucre Supabase.
 - /supabase-postgres-best-practices (`.agents/skills/supabase-postgres-best-practices`) Cargar antes de tocar esquemas, migraciones, RLS o queries en Postgres.
 
+## Agentes (`.opencode/agent/`)
+- **db-migrator** — Verifica que las migraciones existan y estén aplicadas en Supabase: reconcilia `supabase/migrations/*.sql` contra `supabase_list_migrations`, aplica las pendientes y replica los archivos locales con el mismo version. Se invoca con `/db-migrator`.
+- **spec-verifier** — Verifica los criterios de aceptación de una spec: inspecciona el código, corre tsc/lint, chequea best practices de Next.js y compara screenshots (Playwright) contra las referencias. Marca el checklist y pasa la spec a `Implementado` cuando todo pasa.
+- **react-best-practices** — Revisa y refactoriza componentes a best practices actuales de React/Next.js, validando cada decisión contra la documentación oficial vía Context7.
+- **accessibility-checker** — Audita screens contra WCAG 2.2 AA: análisis estático (ARIA/semántica/contraste/formularios) + checks en runtime con Playwright/axe-core y teclado; aplica los fixes y valida con tsc/lint.
+- **db-security-auditor** — Audita la DB por fugas de datos (especialmente entre niños y padres en el modelo multi-tenant) y malas configuraciones de seguridad: RLS, roles, grants, views, funciones, secretos. Detecta y reporta hallazgos con severidad y SQL sugerido; es solo lectura, nunca aplica cambios. Se invoca con `/db-security-auditor`.
+
 ## Reglas de código
 - Usar código limpio, nombres de variables, funciones, etc, en inglés.
