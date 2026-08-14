@@ -16,5 +16,16 @@ export async function login(formData: FormData) {
     return { error: error.message };
   }
 
+  const claims = await supabase.auth.getClaims();
+  const userId = claims.data?.claims?.sub;
+  if (userId) {
+    const { data: user } = await supabase
+      .from("users")
+      .select("role")
+      .eq("id", userId)
+      .single();
+    redirect(user?.role === "parent" ? "/family" : "/staff");
+  }
+
   redirect("/");
 }

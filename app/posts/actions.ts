@@ -9,7 +9,7 @@ import {
   type PostType,
 } from "@/components/new-post-schema";
 import { UI_TO_ENUM, resolveStaffRoom } from "@/utils/feed";
-import { kids } from "@/app/kids/data";
+import { kids } from "@/app/staff/kids/data";
 
 export interface PublishPostResult {
   error?: string;

@@ -6,15 +6,29 @@ import { Bell, Home, Menu, Plus, Sun, User, Users, X } from "lucide-react";
 import type { ActiveItem } from "./sidebar";
 import { NewPostDialog } from "@/components/new-post-dialog";
 
-const navItems = [
-  { key: "feed", href: "/", label: "Feed", icon: Home },
-  { key: "kids", href: "/kids", label: "Niños", icon: Users },
+type NavRole = "staff" | "parent";
+
+const staffNavItems = [
+  { key: "feed", href: "/staff", label: "Feed", icon: Home },
+  { key: "kids", href: "/staff/kids", label: "Niños", icon: Users },
   { key: "notices", href: "#", label: "Avisos", icon: Bell },
   { key: "account", href: "#", label: "Mi cuenta", icon: User },
 ];
 
-export default function MobileHeader({ activeItem = "feed" }: { activeItem?: ActiveItem }) {
+const familyNavItems = [
+  { key: "feed", href: "/family", label: "Feed", icon: Home },
+  { key: "account", href: "#", label: "Mi cuenta", icon: User },
+];
+
+export default function MobileHeader({
+  activeItem = "feed",
+  role = "staff",
+}: {
+  activeItem?: ActiveItem;
+  role?: NavRole;
+}) {
   const [isOpen, setIsOpen] = useState(false);
+  const navItems = role === "parent" ? familyNavItems : staffNavItems;
 
   return (
     <header className="sticky top-0 z-20 lg:hidden">
@@ -35,20 +49,22 @@ export default function MobileHeader({ activeItem = "feed" }: { activeItem?: Act
           <div className="font-display text-base font-semibold leading-tight text-ink">
             OpenDayCare
             <div className="text-[10.5px] font-sans text-ink-faint">
-              Sala Soles
+              {role === "parent" ? "Familia" : "Sala Soles"}
             </div>
           </div>
         </Link>
 
-        <NewPostDialog>
-          <button
-            type="button"
-            aria-label="Nueva publicación"
-            className="ml-auto flex size-10 flex-none items-center justify-center rounded-[12px] bg-[linear-gradient(180deg,#F4977E,#EE8164)] text-white shadow-[0_8px_18px_-8px_rgba(238,129,100,.75)]"
-          >
-            <Plus size={20} strokeWidth={2.4} />
-          </button>
-        </NewPostDialog>
+        {role !== "parent" && (
+          <NewPostDialog>
+            <button
+              type="button"
+              aria-label="Nueva publicación"
+              className="ml-auto flex size-10 flex-none items-center justify-center rounded-[12px] bg-[linear-gradient(180deg,#F4977E,#EE8164)] text-white shadow-[0_8px_18px_-8px_rgba(238,129,100,.75)]"
+            >
+              <Plus size={20} strokeWidth={2.4} />
+            </button>
+          </NewPostDialog>
+        )}
       </div>
 
       {isOpen && (

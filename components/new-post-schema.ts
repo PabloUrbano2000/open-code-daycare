@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { kids } from "@/app/kids/data";
+import { kids } from "@/app/staff/kids/data";
 
 export const POST_TYPES = [
   "Comida",

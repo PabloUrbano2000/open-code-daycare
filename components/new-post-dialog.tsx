@@ -6,7 +6,7 @@ import { Plus, TriangleAlert, X } from "lucide-react";
 import * as Dialog from "@radix-ui/react-dialog";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller, get } from "react-hook-form";
-import { kids } from "@/app/kids/data";
+import { kids } from "@/app/staff/kids/data";
 import {
   fieldClass,
   FieldLabel,

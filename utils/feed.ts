@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { kids, type Kid } from "@/app/kids/data";
+import { kids, type Kid } from "@/app/staff/kids/data";
 import { createClient } from "@/utils/supabase/server";
 
 export const POST_TYPE_UI_LABELS = [

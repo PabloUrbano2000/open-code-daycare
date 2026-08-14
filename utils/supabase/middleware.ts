@@ -40,24 +40,50 @@ export async function updateSession(request: NextRequest) {
   // IMPORTANT: If you remove getClaims() and you use server-side rendering
   // with the Supabase client, your users may be randomly logged out.
   const claimsResult = await supabase.auth.getClaims();
-  const user = claimsResult.data?.claims?.sub ? { id: claimsResult.data.claims.sub } : null;
+  const userId = claimsResult.data?.claims?.sub
+    ? claimsResult.data.claims.sub
+    : null;
 
-  const { pathname } = request.nextUrl;
-  const isPrivate =
-    pathname === "/" ||
-    pathname === "/kids" ||
-    pathname.startsWith("/kids/");
-
-  if (isPrivate && !user) {
-    const url = request.nextUrl.clone();
-    url.pathname = "/login";
-    supabaseResponse = NextResponse.redirect(url);
+  let role: "staff" | "parent" | null = null;
+  if (userId) {
+    const { data } = await supabase
+      .from("users")
+      .select("role")
+      .eq("id", userId)
+      .single();
+    role = data?.role ?? null;
   }
 
-  if (pathname === "/login" && user) {
+  const { pathname } = request.nextUrl;
+
+  const redirect = (path: string) => {
     const url = request.nextUrl.clone();
-    url.pathname = "/";
-    supabaseResponse = NextResponse.redirect(url);
+    url.pathname = path;
+    return NextResponse.redirect(url);
+  };
+
+  const isStaffRoute =
+    pathname === "/staff" || pathname.startsWith("/staff/");
+  const isFamilyRoute = pathname === "/family";
+
+  if (isStaffRoute || isFamilyRoute) {
+    if (!userId) {
+      supabaseResponse = redirect("/login");
+    } else if (isStaffRoute && role !== "staff") {
+      supabaseResponse = redirect("/family");
+    } else if (isFamilyRoute && role !== "parent") {
+      supabaseResponse = redirect("/staff");
+    }
+  } else if (pathname === "/") {
+    if (!userId) {
+      supabaseResponse = redirect("/login");
+    } else {
+      supabaseResponse = redirect(role === "parent" ? "/family" : "/staff");
+    }
+  }
+
+  if (pathname === "/login" && userId) {
+    supabaseResponse = redirect(role === "parent" ? "/family" : "/staff");
   }
 
   return { supabase, supabaseResponse };

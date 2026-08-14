@@ -6,11 +6,17 @@ import { createClient } from "@/utils/supabase/server";
 import { logout } from "@/app/logout/actions";
 
 export type ActiveItem = "feed" | "kids" | "notices" | "account";
+export type UserRole = "staff" | "parent" | "admin";
 
-const navItems = [
-  { key: "feed", href: "/", label: "Feed", icon: Home },
-  { key: "kids", href: "/kids", label: "Niños", icon: Users },
+const staffNavItems = [
+  { key: "feed", href: "/staff", label: "Feed", icon: Home },
+  { key: "kids", href: "/staff/kids", label: "Niños", icon: Users },
   { key: "notices", href: "#", label: "Avisos", icon: Bell },
+  { key: "account", href: "#", label: "Mi cuenta", icon: User },
+];
+
+const familyNavItems = [
+  { key: "feed", href: "/family", label: "Feed", icon: Home },
   { key: "account", href: "#", label: "Mi cuenta", icon: User },
 ];
 
@@ -31,7 +37,7 @@ export default async function Sidebar({
   } = await supabase.auth.getUser();
 
   let fullName: string | null = null;
-  let roleLabel: string | null = null;
+  let role: UserRole | null = null;
 
   if (user) {
     const { data } = await supabase
@@ -41,17 +47,20 @@ export default async function Sidebar({
       .single();
     if (data) {
       fullName = data.full_name;
-      roleLabel = roleLabels[data.role] ?? null;
+      role = data.role as UserRole;
     }
   }
 
+  const isFamily = role === "parent";
+  const navItems = isFamily ? familyNavItems : staffNavItems;
   const displayName = fullName ?? "Usuario";
   const initial = displayName.charAt(0).toUpperCase();
+  const roleLabel = role ? (roleLabels[role] ?? null) : null;
 
   return (
     <aside className="hidden lg:flex sticky top-0 h-screen w-[248px] flex-none flex-col border-r border-line bg-surface px-4 py-6">
       <Link
-        href="#"
+        href={isFamily ? "/family" : "/staff"}
         className="mb-[22px] flex items-center gap-[11px] px-2 pt-1 pb-[22px]"
       >
         <div className="flex size-[38px] flex-none items-center justify-center rounded-xl bg-[linear-gradient(155deg,#F8C3A8,#F2937A)]">
@@ -61,19 +70,23 @@ export default async function Sidebar({
           <div className="font-display text-[17px] font-semibold leading-none text-ink">
             OpenDayCare
           </div>
-          <div className="mt-[2px] text-[11.5px] text-ink-faint">Sala Soles</div>
+          <div className="mt-[2px] text-[11.5px] text-ink-faint">
+            {isFamily ? "Familia" : "Sala Soles"}
+          </div>
         </div>
       </Link>
 
-      <NewPostDialog>
-        <button
-          type="button"
-          className="mb-[18px] flex w-full items-center justify-center gap-2 rounded-[14px] bg-[linear-gradient(180deg,#F4977E,#EE8164)] px-4 py-3 text-[14.5px] font-extrabold text-white shadow-[0_8px_18px_-8px_rgba(238,129,100,.75)]"
-        >
-          <Plus size={17} stroke="#fff" strokeWidth={2.4} />
-          Nueva publicación
-        </button>
-      </NewPostDialog>
+      {!isFamily && (
+        <NewPostDialog>
+          <button
+            type="button"
+            className="mb-[18px] flex w-full items-center justify-center gap-2 rounded-[14px] bg-[linear-gradient(180deg,#F4977E,#EE8164)] px-4 py-3 text-[14.5px] font-extrabold text-white shadow-[0_8px_18px_-8px_rgba(238,129,100,.75)]"
+          >
+            <Plus size={17} stroke="#fff" strokeWidth={2.4} />
+            Nueva publicación
+          </button>
+        </NewPostDialog>
+      )}
 
       <nav className="flex flex-1 flex-col gap-1">
         {navItems.map((item) => (

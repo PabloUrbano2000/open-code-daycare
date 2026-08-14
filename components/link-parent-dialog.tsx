@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, Controller } from "react-hook-form";
 import { Info, Plus, Send, X, TriangleAlert } from "lucide-react";
 import { fieldClass, FieldLabel, FieldError } from "@/components/form-controls";
-import { inviteParent } from "@/app/kids/[slug]/actions";
+import { inviteParent } from "@/app/staff/kids/[slug]/actions";
 import {
   RELATIONS,
   linkParentSchema,
